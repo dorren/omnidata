@@ -1,6 +1,6 @@
 # omnidata
 
-*Currently in super alpha stage, everything's subjected to change.*
+**Currently in super alpha stage, everything's subjected to change.**
 
 Omnidata allows you to define your models in persistence agnostic fashion, so 
 model can be saved in any database you like, mongodb, couchdb, redis, etc. 
