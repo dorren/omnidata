@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "omnidata"
   gem.homepage = "http://github.com/dorren/omnidata"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Omnidata is a persistence agnostic ORM gem}
+  gem.description = %Q{Omnidata let you define your model free from any specific database.}
   gem.email = "dorrenchen@gmail.com"
   gem.authors = ["Dorren Chen"]
   # dependencies defined in Gemfile
