@@ -34,6 +34,31 @@ shared_examples "Persistence" do
       user.should be_nil
     end
 
+    it "should find all" do
+      users = Example::User.find
+      users.each do |x|
+        x.should be_instance_of user.class
+      end
+    end
+
+    describe "test pagination" do
+      before(:each) do
+        user2 = Example::User.create(:name => 'user2')
+        user3 = Example::User.create(:name => 'user3')
+      end
+
+      it "should use limit" do
+        users = Example::User.find(:limit => 1)
+        users.size.should == 1
+        users.first.name.should == 'Jack'
+      end
+
+      it "should skip" do
+        users = Example::User.find(:limit => 1, :skip => 1)
+        users.first.name.should == 'user2'
+      end
+    end
+
     it "should destroy" do
       lambda { @user.destroy }.should change(Example::User, :count).from(1).to(0)
     end

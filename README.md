@@ -4,7 +4,7 @@ warning:
 **Currently in super alpha stage, everything's subjected to change.**
 
 Omnidata allows you to define your models in persistence agnostic fashion, so 
-model can be saved in any database you like, mongodb, couchdb, redis, etc. 
+model can be saved in any database you like, mongodb, couchdb etc. 
 
 Gem uses [Virtus](https://github.com/solnic/virtus#readme) for defining attributes.
 
@@ -25,7 +25,12 @@ For example:
     user.save
     User.find(user.id)
 
-    # to switch to another db temporarily.
+    User.find  # return all users
+
+    User.count
+    User.find(:limit => 10, :skip => 10)    # paginated query
+
+    # Switch to another db temporarily.
     User.with_database(:db2) do
       User.find(user.id)
     end

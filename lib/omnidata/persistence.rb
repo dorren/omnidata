@@ -36,7 +36,23 @@ module Omnidata
         model
       end
 
-      def find(pk)
+      def find(query=nil)
+        if query.kind_of?(String) or query.kind_of?(Integer)
+          find_one(query)
+        else
+          find_all(query)
+        end
+      end
+
+      def find_all(query)
+        arr = adapter.find(query, table_name)
+        arr.collect do |attrs|
+          pk = attrs.delete('id')
+          build_model(pk, attrs)
+        end
+      end
+
+      def find_one(pk)
         attrs = adapter.find(pk, table_name)
         if (attrs)
           build_model(pk, attrs)

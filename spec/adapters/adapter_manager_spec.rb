@@ -10,15 +10,21 @@ describe Omnidata::Adapters::AdapterManager do
     mgr.adapters.should be_empty
   end
 
-  it "should store named configurations" do
-    adapter = mgr.add(:db1, config)
-    adapter.should be_a_kind_of(Omnidata::Adapters::AbstractAdapter)
-    mgr.adapter(:db1).should == adapter
-  end
+  describe "with one adapter setup" do
+    let!(:adapter) { mgr.add(:db1, config) }
 
-  it "should not add twice" do
-    adapter = mgr.add(:db1, config)
-    lambda { mgr.add(:db1, config) }.should raise_error(Omnidata::Adapters::AdapterError)
+    it "should store named configurations" do
+      adapter.should be_a_kind_of(Omnidata::Adapters::AbstractAdapter)
+      mgr.adapter(:db1).should == adapter
+    end
+
+    it "should set adapter's name" do
+      mgr.adapter(:db1).name.should == :db1
+    end
+
+    it "should not add twice" do
+      lambda { mgr.add(:db1, config) }.should raise_error(Omnidata::Adapters::AdapterError)
+    end
   end
 
   it "should use shortcut method" do
