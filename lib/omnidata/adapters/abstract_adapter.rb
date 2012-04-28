@@ -6,10 +6,6 @@ module Omnidata
       def initialize(options)
         @config = options.dup
       end
-
-      def create
-        
-      end
     end
   end
 end

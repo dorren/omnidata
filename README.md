@@ -1,9 +1,11 @@
-* omnidata
+# omnidata
+
+*Currently in super alpha stage, everything's subjected to change.*
 
 Omnidata allows you to define your models in persistence agnostic fashion, so 
 you can save in any database you like, mongodb, couchdb, redis, etc. 
 
-Gem uses Virtus for defining attributes.
+Gem uses [Virtus](https://github.com/solnic/virtus#readme) for defining attributes.
 
 
 For example:

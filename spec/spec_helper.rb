@@ -1,5 +1,7 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
+
+require 'backports' if RUBY_VERSION < '1.9.3'
 require 'rspec'
 require 'omnidata'
 require 'fixtures/example_models'

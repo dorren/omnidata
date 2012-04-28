@@ -12,12 +12,13 @@ module Omnidata
       if new_record?
         self.id = self.class.create(attributes)
       else
-        self.class.update(attributes)
+        self.class.update(id, attributes)
       end
       self
     end
 
     def destroy
+      self.class.destroy(id)
     end
     
     module ClassMethods
@@ -41,6 +42,13 @@ module Omnidata
         key = adapter.create(table_name, attrs)
       end
 
+      def update(pk, attrs)
+        adapter.update(pk, table_name, attrs)
+      end
+
+      def destroy(pk)
+        adapter.destroy(pk, table_name)
+      end
 
       def count
         adapter.count(table_name)

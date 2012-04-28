@@ -15,9 +15,19 @@ module Omnidata
         key = coll.insert(attrs)
       end
 
+      def update(pk, table_name, attrs)
+        coll = database.collection(table_name)
+        coll.update({"_id" => pk}, {"$set" => attrs})
+      end
+
       def count(table_name)
         coll = database.collection(table_name)
         coll.count
+      end
+
+      def destroy(pk, table_name)
+        coll = database.collection(table_name)
+        coll.remove("_id" => pk)
       end
     end
   end
