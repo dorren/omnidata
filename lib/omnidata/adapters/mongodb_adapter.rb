@@ -22,12 +22,13 @@ module Omnidata
 
       def find_one(pk, table_name)
         attrs = table(table_name).find_one("_id" => build_key(pk))
+        change_id(attrs)
       end
 
       def find_all(query, table_name)
         meta_query = build_meta_query(query)
         arr = table(table_name).find(query, meta_query)
-        arr.collect{|x| x['id'] = x['_id'].to_s; x}
+        arr.collect{|x| change_id(x)}
       end
 
       def create(table_name, attrs)
@@ -50,6 +51,13 @@ module Omnidata
       private
       def build_key(pk)
         pk.kind_of?(String) ? BSON::ObjectId(pk) : pk
+      end
+
+      def change_id(attrs)
+        if attrs.kind_of?(Hash)
+          attrs['id'] = attrs['_id'].to_s
+        end
+        attrs
       end
 
       def table(name)

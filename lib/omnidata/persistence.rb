@@ -30,10 +30,8 @@ module Omnidata
         @adapter = adapter
       end
 
-      def build_model(pk, attrs)
+      def build_model(attrs)
         model = new(attrs)
-        model.id = pk
-        model
       end
 
       def find(query=nil)
@@ -47,21 +45,20 @@ module Omnidata
       def find_all(query)
         arr = adapter.find(query, table_name)
         arr.collect do |attrs|
-          pk = attrs.delete('id')
-          build_model(pk, attrs)
+          build_model(attrs)
         end
       end
 
       def find_one(pk)
         attrs = adapter.find(pk, table_name)
         if (attrs)
-          build_model(pk, attrs)
+          build_model(attrs)
         end
       end
 
       def create(attrs)
         key = adapter.create(table_name, attrs)
-        build_model(key, attrs)
+        build_model(attrs.merge('id'=> key))
       end
 
       def update(pk, attrs)
