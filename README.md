@@ -8,32 +8,40 @@ model can be saved in any database you like, mongodb, couchdb etc.
 
 Gem uses [Virtus](https://github.com/solnic/virtus#readme) for defining attributes.
 
-For example:
+For example, to define the database and model.
 
-    Omnidata.setup_database(:db1, {:adapter => 'mongodb', :database => 'mydb'})
-    Omnidata.setup_database(:db2, {:adapter => 'mongodb', :database => 'mydb2'})
+``` ruby
+Omnidata.setup_database(:db1, {:adapter => 'mongodb', :database => 'mydb'})
+Omnidata.setup_database(:db2, {:adapter => 'mongodb', :database => 'mydb2'})
 
-    class User
-      include Omnidata::Model
-      use_database :db1
+class User
+  include Omnidata::Model
+  use_database :db1
 
-      attribute :name, String
-      attribute :age, Integer
-    end
+  attribute :name, String
+  attribute :age, Integer
+end
+```
 
-    user = User.new(:name => 'Jack Hunt', :age => 27)
-    user.save
-    User.find(user.id)
+Typical usage
 
-    User.find  # return all users
+``` ruby
+user = User.new(:name => 'Jack Hunt', :age => 27)
+user.save
+User.find(user.id)
 
-    User.count
-    User.find(:limit => 10, :skip => 10)    # paginated query
+User.find  # return all users
 
-    # Switch to another db temporarily.
-    User.with_database(:db2) do
-      User.find(user.id)
-    end
+User.count
+User.find(:limit => 10, :skip => 10)    # paginated query
+```
 
+Switch to another db temporarily.
+
+``` ruby
+User.with_database(:db2) do
+  User.find(user.id)
+end
+```
 
 
