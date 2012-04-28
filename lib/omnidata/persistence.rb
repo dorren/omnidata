@@ -22,36 +22,51 @@ module Omnidata
     end
     
     module ClassMethods
-      attr_reader :config
+      attr_reader :adapter
 
-      # options 
-      #   :adapter - mongodb
-      #   :database - mydb
-      def use_database(options)
-        @config = options.dup
+      def use_database(name)
+        adapter = Adapters::AdapterManager.instance.adapter(name)
+        raise Adapters::AdapterError.new("adapter #{name} does not exist") if adapter.nil?
+        @adapter = adapter
       end
 
-      def adapter
-        @adapter ||= begin
-          name = config[:adapter].capitalize
-          "Omnidata::Adapters::#{name}Adapter".constantize.new(config)
+      def build_model(pk, attrs)
+        model = new(attrs)
+        model.id = pk
+        model
+      end
+
+      def find(pk)
+        attrs = adapter.find(pk, table_name)
+        if (attrs)
+          build_model(pk, attrs)
         end
       end
 
       def create(attrs)
         key = adapter.create(table_name, attrs)
+        build_model(key, attrs)
       end
 
       def update(pk, attrs)
         adapter.update(pk, table_name, attrs)
+        self
       end
 
       def destroy(pk)
         adapter.destroy(pk, table_name)
+        self
       end
 
       def count
         adapter.count(table_name)
+      end
+
+      def with_database(name, &block)
+        old = self.adapter.name
+        self.use_database(name)
+        block.call
+        self.use_database(old)
       end
     end
   end
