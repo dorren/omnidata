@@ -17,7 +17,7 @@ shared_examples "Persistence" do
 
   describe "with saved model" do
     before(:each) do
-      @user = Example::User.create(:name => 'Jack')
+      @user = Example::User.create(:name => 'Jack', :age => 27)
     end
     
     it "should find" do
@@ -41,10 +41,10 @@ shared_examples "Persistence" do
       end
     end
 
-    describe "test pagination" do
+    describe "test meta query params, like limit, skip, order" do
       before(:each) do
-        user2 = Example::User.create(:name => 'user2')
-        user3 = Example::User.create(:name => 'user3')
+        user2 = Example::User.create(:name => 'user2', :age => 100)
+        user3 = Example::User.create(:name => 'user3', :age => 1)
       end
 
       it "should use limit" do
@@ -56,6 +56,12 @@ shared_examples "Persistence" do
       it "should skip" do
         users = Example::User.find(:limit => 1, :skip => 1)
         users.first.name.should == 'user2'
+      end
+
+      it "should sort" do
+        users = Example::User.find(:order => :age)
+        users[0].age.should <= users[1].age
+        users[1].age.should <= users[2].age
       end
     end
 

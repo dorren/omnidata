@@ -53,6 +53,7 @@ module Omnidata
         pk.kind_of?(String) ? BSON::ObjectId(pk) : pk
       end
 
+      # convert mongodb's bson::objectId to just string
       def change_id(attrs)
         if attrs.kind_of?(Hash)
           attrs['id'] = attrs['_id'].to_s
@@ -64,10 +65,17 @@ module Omnidata
         database.collection(name)
       end
 
+      # separate out :limit and :skip params from main query hash.
+      #
+      # reference: 
+      # https://github.com/mongodb/mongo-ruby-driver/blob/master/lib/mongo/collection.rb
       def build_meta_query(query)
         meta_query = {}
-        meta_query[:limit] = query.delete(:limit) if query.kind_of?(Hash) and query[:limit]
-        meta_query[:skip] = query.delete(:skip)   if query.kind_of?(Hash) and query[:skip]
+        if query.kind_of?(Hash)
+          meta_query[:limit] = query.delete(:limit) if query[:limit]
+          meta_query[:skip] = query.delete(:skip)   if query[:skip]
+          meta_query[:sort] = [query.delete(:order), 1] if query[:order] # 1 = ASC, -1 = DESC
+        end
         meta_query
       end
     end

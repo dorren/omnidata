@@ -23,7 +23,7 @@ class User
 end
 ```
 
-Typical usage
+Typical query usage
 
 ``` ruby
 user = User.new(:name => 'Jack Hunt', :age => 27)
@@ -34,6 +34,8 @@ User.find  # return all users
 
 User.count
 User.find(:limit => 10, :skip => 10)    # paginated query
+
+User.find(:order => :age)      # sort by age
 ```
 
 Switch to another db temporarily.
