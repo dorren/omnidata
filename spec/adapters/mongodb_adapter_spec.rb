@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'shared_orm'
 require 'shared_persistence'
+require 'shared_association'
 
 describe Omnidata::Adapters::MongodbAdapter do
   let(:mgr) { Omnidata::Adapters::AdapterManager.instance }
@@ -12,7 +13,8 @@ describe Omnidata::Adapters::MongodbAdapter do
     Omnidata.setup_database(:db1, config)
     Omnidata.setup_database(:db2, {:adapter => 'mongodb', :database => 'mydb2'})
 
-    user.class.use_database(:db1)
+    Example::User.use_database(:db1)
+    Example::Comment.use_database(:db2)
   end
 
   before(:each) do
@@ -29,6 +31,7 @@ describe Omnidata::Adapters::MongodbAdapter do
 
   include_examples 'Orm'
   include_examples 'Persistence'
+  include_examples 'Association'
 end
 
 

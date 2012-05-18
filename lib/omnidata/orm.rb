@@ -10,8 +10,6 @@ module Omnidata
 
     def new_record?
       self.id.nil?
-    rescue
-      true
     end
 
 

@@ -1,4 +1,5 @@
 require 'singleton'
+require 'connection_pool'
 
 module Omnidata
   module Adapters
@@ -10,6 +11,7 @@ module Omnidata
       include Singleton
 
       attr_reader :adapters
+      attr_reader :pools
 
       def initialize
         reset
@@ -17,6 +19,7 @@ module Omnidata
 
       def reset
         @adapters = {}
+        @pools = {}
       end
 
       def add(name, options)
