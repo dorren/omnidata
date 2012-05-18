@@ -4,7 +4,6 @@ gem 'backports'  if RUBY_VERSION < '1.9.3'
 
 gem 'active_support'
 gem 'virtus'
-gem 'connection_pool', '~> 0.9.1'
 
 group :development do
   gem "rspec", "~> 2.8.0"
