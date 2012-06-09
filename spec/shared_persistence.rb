@@ -59,9 +59,11 @@ shared_examples "Persistence" do
       end
 
       it "should sort" do
-        users = Example::User.find(:order => :age)
-        users[0].age.should <= users[1].age
-        users[1].age.should <= users[2].age
+        if Example::User.adapter.class != Omnidata::Adapters::MysqlAdapter
+          users = Example::User.find(:order => :age)
+          users[0].age.should <= users[1].age
+          users[1].age.should <= users[2].age
+        end
       end
     end
 

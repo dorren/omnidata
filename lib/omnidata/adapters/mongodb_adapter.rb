@@ -48,6 +48,10 @@ module Omnidata
         table(table_name).remove("_id" => build_key(pk))
       end
 
+      def delete_all(table_name)
+        table(table_name).remove
+      end
+
       private
       def build_key(pk)
         pk.kind_of?(String) ? BSON::ObjectId(pk) : pk

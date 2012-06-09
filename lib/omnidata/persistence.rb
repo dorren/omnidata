@@ -71,6 +71,10 @@ module Omnidata
         self
       end
 
+      def delete_all
+        adapter.delete_all(table_name)
+      end
+
       def count
         adapter.count(table_name)
       end

@@ -29,9 +29,21 @@ describe Omnidata::Adapters::MongodbAdapter do
     user.class.adapter.should be_an_instance_of Omnidata::Adapters::MongodbAdapter
   end
 
-  include_examples 'Orm'
-  include_examples 'Persistence'
-  include_examples 'Association'
+  it "should be able to switch database" do
+    user.class.adapter.name.should be(:db1)
+
+    user.class.with_database(:db2) do
+      user.class.adapter.name.should be(:db2)
+      user.class.create(:name => 'Jack')
+      user.class.count.should == 1
+    end
+    user.class.adapter.name.should be(:db1)
+    user.class.count.should == 0
+  end
+
+  #include_examples 'Orm'
+  #include_examples 'Persistence'
+  #include_examples 'Association'
 end
 
 

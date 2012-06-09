@@ -20,6 +20,8 @@ class User
 
   attribute :name, String
   attribute :age, Integer
+
+  index :age
 end
 ```
 

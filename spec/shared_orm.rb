@@ -13,12 +13,14 @@ shared_examples 'Orm' do
   end
 
   it "should have default table name" do
+    user.class.table_name = nil
     user.class.table_name.should == 'example_users'
   end
 
   it "should change table name" do
     user.class.table_name = 'users'
     user.class.table_name.should == 'users'
+    user.class.table_name = nil
   end
 end
 

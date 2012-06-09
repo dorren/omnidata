@@ -12,6 +12,8 @@ module Example
     attribute :name, String
     attribute :age, Integer
     attribute :comments, [Comment]
+
+    index :age
   end
 
 end
