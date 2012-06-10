@@ -1,8 +1,7 @@
 require 'omnidata/adapters/abstract_adapter'
 require 'omnidata/adapters/adapter_manager'
-require 'omnidata/adapters/mongodb_adapter'
-require 'omnidata/adapters/mysql_adapter'
-require 'omnidata/adapters/mysql/schema'
+Omnidata::Adapters.autoload :MongodbAdapter, 'omnidata/adapters/mongodb_adapter'
+Omnidata::Adapters.autoload :MysqlAdapter, 'omnidata/adapters/mysql_adapter'
 
 require 'omnidata/persistence'
 require 'omnidata/indexing'
