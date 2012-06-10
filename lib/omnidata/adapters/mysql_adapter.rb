@@ -3,6 +3,7 @@ require 'mysql2'
 require 'uuid'
 require 'json'
 require 'omnidata/adapters/mysql/schema'
+require 'omnidata/adapters/mysql/index'
 
 # use mysql like nosql. 
 # @see http://backchannel.org/blog/friendfeed-schemaless-mysql

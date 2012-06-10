@@ -8,6 +8,11 @@ module Omnidata
           @database = database
         end
 
+        def create_table(table_name, sql)
+          return if table_exists?(table_name)
+          execute(sql)
+        end
+
         def create_model_table(table_name)
           return if table_exists?(table_name)
 
@@ -21,22 +26,6 @@ module Omnidata
                   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
           execute(sql)
         end
-
-        # sample fields
-        #   [{:name => 'user_id', :type => String, :limit => 100}]
-        def create_index_table(table_name, fields)
-          fields_part = fields.collect{|field|
-                         "#{field[:name]} #{field[:type]} NOT NULL"
-                       }.join(',')
-          keys_part = fields.collect{|field| field[:name]}.join(", ")
-
-          sql =%{CREATE TABLE #{table_name} (
-                   #{fields_part},
-                   PRIMARY KEY (#{keys_part})
-                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
-          execute(sql)
-        end
-
 
         def table_exists?(table_name)
           sql = "show tables like '#{table_name}'"
