@@ -43,40 +43,40 @@ module Omnidata
       end
 
       def find_all(query)
-        arr = adapter.find(query, table_name)
+        arr = adapter.find(query, self)
         arr.collect do |attrs|
           build_model(attrs)
         end
       end
 
       def find_one(pk)
-        attrs = adapter.find(pk, table_name)
+        attrs = adapter.find(pk, self)
         if (attrs)
           build_model(attrs)
         end
       end
 
       def create(attrs)
-        key = adapter.create(table_name, attrs)
+        key = adapter.create(attrs, self)
         build_model(attrs.merge('id'=> key))
       end
 
       def update(pk, attrs)
-        adapter.update(pk, table_name, attrs)
+        adapter.update(pk, attrs, self)
         self
       end
 
       def destroy(pk)
-        adapter.destroy(pk, table_name)
+        adapter.destroy(pk, self)
         self
       end
 
       def delete_all
-        adapter.delete_all(table_name)
+        adapter.delete_all(self)
       end
 
       def count
-        adapter.count(table_name)
+        adapter.count(self)
       end
 
       def with_database(name, &block)

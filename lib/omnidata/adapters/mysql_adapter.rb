@@ -15,7 +15,7 @@ module Omnidata
     class MysqlAdapter < AbstractAdapter
 
       def uuid_generator
-        @uuid_gen || UUID.new
+        @uuid_gen ||= UUID.new
       end
 
       def gen_uuid
@@ -35,67 +35,72 @@ module Omnidata
         end
       end
 
-      def find(query, table_name)
+      def find(query, model_class)
         if query.kind_of?(String) or query.kind_of?(Integer)
-          find_one(query, table_name)
+          find_one(query, model_class)
         else
-          find_all(query, table_name)
+          find_all(query, model_class)
         end
       end
 
-      def find_one(pk, table_name)
-        create_model_table(table_name)
+      def find_one(pk, model_class)
+        table_name = model_class.table_name
+        create_model_table(model_class)
         result = database.query("SELECT * from #{table_name} WHERE id = '#{pk}'")
         build_attributes(result.first)
       end
 
-      def find_all(query, table_name)
-        create_model_table(table_name)
+      def find_all(query, model_class)
+        table_name = model_class.table_name
+        create_model_table(model_class)
         sql = build_sql(query, table_name)
         result = database.query(sql)
         result.collect{|x| build_attributes(x)}
       end
 
-      def create(table_name, attrs)
-        create_model_table(table_name)
+      def create(attrs, model_class)
+        table_name = model_class.table_name
+        create_model_table(model_class)
         model_id = gen_uuid
         body = attrs.to_json
         res = database.query("INSERT INTO #{table_name} (id, body) values ('#{model_id}', '#{body}')")
         model_id
       end
 
-      def update(pk, table_name, attrs)
-        create_model_table(table_name)
+      def update(pk, attrs, model_class)
+        table_name = model_class.table_name
+        create_model_table(model_class)
         table(table_name).update({"_id" => pk}, {"$set" => attrs})
       end
 
-      def count(table_name)
-        create_model_table(table_name)
+      def count(model_class)
+        table_name = model_class.table_name
+        create_model_table(model_class)
         res = database.query("SELECT COUNT(id) FROM #{table_name}")
         res.first.values.first
       end
 
-      def destroy(pk, table_name)
-        create_model_table(table_name)
+      def destroy(pk, model_class)
+        table_name = model_class.table_name
+        create_model_table(model_class)
         database.query("DELETE FROM #{table_name} WHERE id='#{pk}'")
       end
 
-      def delete_all(table_name)
-        create_model_table(table_name)
+      def delete_all(model_class)
+        table_name = model_class.table_name
+        create_model_table(model_class)
         database.query("DELETE FROM #{table_name}")
       end
 
 
-      def create_model_table(table_name)
+      def create_model_table(model_class)
         schema = Mysql::Schema.new(database)
-        schema.create_model_table(table_name)
+        schema.create_table(model_class.table_name, model_class.to_sql)
       end
 
-      # sample fields
-      #   [{:name => 'user_id', :type => String, :limit => 100}]
-      def create_index_table(table_name, fields)
+      def create_index_table(model_class)
         schema = Mysql::Schema.new(database)
-        schema.create_index_table(table_name)
+        schema.create_table(model_class.table_name, model_class.to_sql)
       end
 
 
@@ -132,4 +137,5 @@ module Omnidata
       end
     end
   end
+
 end

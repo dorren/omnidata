@@ -4,6 +4,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'backports' if RUBY_VERSION < '1.9.3'
 require 'rspec'
 require 'omnidata'
+require 'omnidata/adapters/mysql_adapter'
 require 'fixtures/example_models'
 
 # Requires supporting files with custom matchers and macros, etc,

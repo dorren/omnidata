@@ -57,22 +57,25 @@ module Omnidata
         class << self
           attr_accessor :name
       
-          # override orm module method
+          # override Omnidata::Orm module's method
           def table_name
-            @table_name || self.name
+            @table_name ||= self.name
           end
 
           def to_sql
-            fields_part = fields.collect{|field|
-                           "#{field[:name]} #{field[:type]} NOT NULL"
-                         }.join(',')
-            keys_part = fields.collect{|field| field[:name]}.join(", ")
+            fields_part = attributes.collect{|attr|
+                           name = attr.name
+                           column = Schema::COLUMN_TYPES[attr.options[:primitive]]
+                           type = column[:limit] ? "#{column[:name]}(#{column[:limit]})" : "#{column[:name]}"
+                           "#{name} #{type} NOT NULL"
+                         }.join(",\n  ")
+            keys_part = attributes.collect{|attr| "KEY #{attr.name}"}.join(",\n  ")
 
-            sql =%{CREATE TABLE #{table_name} (
-                     #{fields_part},
-                     PRIMARY KEY (#{keys_part})
-                   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
-            execute(sql)
+            sql =%{\
+CREATE TABLE #{table_name} (
+  #{fields_part},
+  #{keys_part}
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
           end
 
           def setup_index(name, fields, options={})

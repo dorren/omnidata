@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'omnidata/adapters/mysql_adapter'
 
 describe Omnidata::Adapters::Mysql::Index do
   let(:mgr) { Omnidata::Adapters::AdapterManager.instance }
@@ -41,6 +40,17 @@ describe Omnidata::Adapters::Mysql::Index do
   it "should have configured class name" do
     @index_class.name.should       == 'users_age_index'
     @index_class.table_name.should == 'users_age_index'
+  end
+
+  it "should generate to_sql" do
+    sql = @index_class.to_sql
+    sql.should == %{\
+CREATE TABLE users_age_index (
+  user_id varchar(255) NOT NULL,
+  age int(4) NOT NULL,
+  KEY user_id,
+  KEY age
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
   end
 end
 

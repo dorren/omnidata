@@ -15,7 +15,7 @@ module Omnidata
 
     module ClassMethods
       def table_name
-        @table_name || self.name.tableize.gsub("/", "_")
+        @table_name ||= self.name.tableize.gsub("/", "_")
       end
 
       def table_name=(str)

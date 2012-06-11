@@ -1,7 +1,33 @@
 module Omnidata
   module Adapters
     module Mysql
+      # to be included into Model
+      module ModelSchema
+        extend ActiveSupport::Concern
+        module ClassMethods
+          def to_sql
+            sql = %{CREATE TABLE #{table_name} (
+                        added_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                        id VARCHAR(32) NOT NULL,
+                        updated TIMESTAMP NOT NULL,
+                        body MEDIUMBLOB,
+                        UNIQUE KEY (id),
+                        KEY (updated)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
+          end
+        end
+      end
+
       class Schema
+        # convert ruby type to column types
+        COLUMN_TYPES = {
+          String   => { :name => "varchar", :limit => 255 },
+          Integer  => { :name => "int", :limit => 4 },
+          Date     => { :name => "date" },
+          DateTime => { :name => "datetime" },
+          Time     => { :name => "datetime" },
+          }
+
         attr_reader :database
 
         def initialize(database)
@@ -10,20 +36,6 @@ module Omnidata
 
         def create_table(table_name, sql)
           return if table_exists?(table_name)
-          execute(sql)
-        end
-
-        def create_model_table(table_name)
-          return if table_exists?(table_name)
-
-          sql = %{CREATE TABLE #{table_name} (
-                      added_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                      id VARCHAR(32) NOT NULL,
-                      updated TIMESTAMP NOT NULL,
-                      body MEDIUMBLOB,
-                      UNIQUE KEY (id),
-                      KEY (updated)
-                  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
           execute(sql)
         end
 
@@ -40,3 +52,6 @@ module Omnidata
     end
   end
 end
+  
+Omnidata::Model.send :include, Omnidata::Adapters::Mysql::ModelSchema
+
