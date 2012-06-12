@@ -45,14 +45,14 @@ module Omnidata
 
       def find_one(pk, model_class)
         table_name = model_class.table_name
-        create_model_table(model_class)
+        create_table(model_class)
         result = database.query("SELECT * from #{table_name} WHERE id = '#{pk}'")
         build_attributes(result.first)
       end
 
       def find_all(query, model_class)
         table_name = model_class.table_name
-        create_model_table(model_class)
+        create_table(model_class)
         sql = build_sql(query, table_name)
         result = database.query(sql)
         result.collect{|x| build_attributes(x)}
@@ -60,7 +60,7 @@ module Omnidata
 
       def create(attrs, model_class)
         table_name = model_class.table_name
-        create_model_table(model_class)
+        create_table(model_class)
         model_id = gen_uuid
         body = attrs.to_json
         res = database.query("INSERT INTO #{table_name} (id, body) values ('#{model_id}', '#{body}')")
@@ -69,40 +69,34 @@ module Omnidata
 
       def update(pk, attrs, model_class)
         table_name = model_class.table_name
-        create_model_table(model_class)
+        create_table(model_class)
         table(table_name).update({"_id" => pk}, {"$set" => attrs})
       end
 
       def count(model_class)
         table_name = model_class.table_name
-        create_model_table(model_class)
+        create_table(model_class)
         res = database.query("SELECT COUNT(id) FROM #{table_name}")
         res.first.values.first
       end
 
       def destroy(pk, model_class)
         table_name = model_class.table_name
-        create_model_table(model_class)
+        create_table(model_class)
         database.query("DELETE FROM #{table_name} WHERE id='#{pk}'")
       end
 
       def delete_all(model_class)
         table_name = model_class.table_name
-        create_model_table(model_class)
+        create_table(model_class)
         database.query("DELETE FROM #{table_name}")
       end
 
 
-      def create_model_table(model_class)
+      def create_table(model_class)
         schema = Mysql::Schema.new(database)
         schema.create_table(model_class.table_name, model_class.to_sql)
       end
-
-      def create_index_table(model_class)
-        schema = Mysql::Schema.new(database)
-        schema.create_table(model_class.table_name, model_class.to_sql)
-      end
-
 
       def build_sql(query, table_name)
         meta_query = build_meta_query(query)
@@ -115,7 +109,7 @@ module Omnidata
 
       def create_index(name, fields, options)
         idx_class = Mysql::Index.build_index_class(name, fields, options)
-        create_index_table(idx_class)
+        create_table(idx_class)
         idx_class
       end
 

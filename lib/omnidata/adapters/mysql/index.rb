@@ -87,7 +87,6 @@ CREATE TABLE #{table_name} (
             end
             klass
           end
-
         end
       end
     end

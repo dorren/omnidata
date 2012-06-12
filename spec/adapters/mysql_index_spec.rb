@@ -53,15 +53,32 @@ CREATE TABLE users_age_index (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
   end
 
-  it "should have index config" do
-    idx_name = Example::User.index_name(:age)
-    Example::User.indices[idx_name].should_not be_nil
-  end
+  describe "example user index :age" do
+    let(:idx_name) {Example::User.index_name(:age)}
 
-  it "should create index" do
-    idx_name = Example::User.index_name(:age)
-    idx_class = Example::User.create_index(idx_name)
-    idx_class.new.should be_kind_of(Omnidata::Adapters::Mysql::Index)
+    it "should have default index name" do
+      idx_name.should == "example_users_age_index"
+    end
+
+    it "should have index config" do
+      Example::User.indices[idx_name].should_not be_nil
+    end
+
+    it "should generate index sql" do
+      idx_class = Example::User.create_index(idx_name)
+      idx_class.to_sql.should == %{\
+CREATE TABLE example_users_age_index (
+  user_id varchar(255) NOT NULL,
+  age int(4) NOT NULL,
+  KEY (user_id),
+  KEY (age)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
+    end
+
+    it "should create index" do
+      idx_class = Example::User.create_index(idx_name)
+      idx_class.new.should be_kind_of(Omnidata::Adapters::Mysql::Index)
+    end
   end
 end
 

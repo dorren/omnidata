@@ -31,13 +31,17 @@ module Omnidata
       def index(fields, options={})
         fields = [*fields]
         idx_name = options[:name] || index_name(fields)
-        fields = fields.collect do |f|
+        
+        all = []
+        all << [name.foreign_key.to_sym, attributes[:id].options[:primitive]]
+
+        fields.each do |f|
           attr = attributes[f]
-          [attr.name, attr.options[:primitive]]
+          all << [attr.name, attr.options[:primitive]]
         end
 
         self.indices ||= {}
-        self.indices[idx_name] = [idx_name, fields, options]
+        self.indices[idx_name] = [idx_name, all, options]
       end
 
       # after class has adapter set, which is set by calling use_database

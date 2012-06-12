@@ -5,6 +5,7 @@ module Omnidata
     extend ActiveSupport::Concern
 
     included do
+      # TODO, allow primary key to be configurable
       attribute :id, String
     end
 
@@ -14,6 +15,7 @@ module Omnidata
 
 
     module ClassMethods
+
     end
   end
 end
