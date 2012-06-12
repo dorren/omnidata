@@ -9,6 +9,7 @@ module Omnidata
       include Virtus
       include Persistence
       include Orm
+      include PrimaryKey
       include Indexing
     end
   end

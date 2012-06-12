@@ -3,6 +3,7 @@ require 'omnidata/adapters/adapter_manager'
 require 'omnidata/persistence'
 require 'omnidata/indexing'
 require 'omnidata/orm'
+require 'omnidata/primary_key'
 require 'omnidata/model'
 
 Omnidata::Adapters.autoload :MongodbAdapter, 'omnidata/adapters/mongodb_adapter'

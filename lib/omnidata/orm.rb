@@ -5,13 +5,7 @@ module Omnidata
     extend ActiveSupport::Concern
 
     included do
-      attr_accessor :id
     end
-
-    def new_record?
-      self.id.nil?
-    end
-
 
     module ClassMethods
       def table_name
