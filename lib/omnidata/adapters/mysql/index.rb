@@ -69,7 +69,7 @@ module Omnidata
                            type = column[:limit] ? "#{column[:name]}(#{column[:limit]})" : "#{column[:name]}"
                            "#{name} #{type} NOT NULL"
                          }.join(",\n  ")
-            keys_part = attributes.collect{|attr| "KEY #{attr.name}"}.join(",\n  ")
+            keys_part = attributes.collect{|attr| "KEY (#{attr.name})"}.join(",\n  ")
 
             sql =%{\
 CREATE TABLE #{table_name} (
@@ -78,7 +78,7 @@ CREATE TABLE #{table_name} (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
           end
 
-          def setup_index(name, fields, options={})
+          def build_index_class(name, fields, options={})
             klass = Class.new(Index)
             klass.name = name
 
@@ -87,6 +87,7 @@ CREATE TABLE #{table_name} (
             end
             klass
           end
+
         end
       end
     end

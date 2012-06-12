@@ -113,6 +113,11 @@ module Omnidata
         sql
       end
 
+      def create_index(name, fields, options)
+        idx_class = Mysql::Index.build_index_class(name, fields, options)
+        create_index_table(idx_class)
+        idx_class
+      end
 
       private
 

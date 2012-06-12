@@ -60,6 +60,10 @@ module Omnidata
         table(table_name).remove
       end
 
+      def index(fields, options={})
+
+      end
+
       private
       def build_key(pk)
         pk.kind_of?(String) ? BSON::ObjectId(pk) : pk

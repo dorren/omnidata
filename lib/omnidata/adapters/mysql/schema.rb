@@ -18,6 +18,7 @@ module Omnidata
         end
       end
 
+
       class Schema
         # convert ruby type to column types
         COLUMN_TYPES = {

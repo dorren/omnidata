@@ -20,7 +20,7 @@ describe Omnidata::Adapters::Mysql::Index do
     Example::User.use_database(:db1)
     Example::Comment.use_database(:db2)
 
-    @index_class = Omnidata::Adapters::Mysql::Index.setup_index(*age_cfg)
+    @index_class = Omnidata::Adapters::Mysql::Index.build_index_class(*age_cfg)
     @index_class.use_database(:db1)
   end
 
@@ -48,9 +48,20 @@ describe Omnidata::Adapters::Mysql::Index do
 CREATE TABLE users_age_index (
   user_id varchar(255) NOT NULL,
   age int(4) NOT NULL,
-  KEY user_id,
-  KEY age
+  KEY (user_id),
+  KEY (age)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;}
+  end
+
+  it "should have index config" do
+    idx_name = Example::User.index_name(:age)
+    Example::User.indices[idx_name].should_not be_nil
+  end
+
+  it "should create index" do
+    idx_name = Example::User.index_name(:age)
+    idx_class = Example::User.create_index(idx_name)
+    idx_class.new.should be_kind_of(Omnidata::Adapters::Mysql::Index)
   end
 end
 
