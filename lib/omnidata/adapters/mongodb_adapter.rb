@@ -15,9 +15,9 @@ module Omnidata
       def find(query, model_class)
         table_name = model_class.table_name
         if query.kind_of?(String) or query.kind_of?(Integer)
-          find_one(query, table_name)
+          find_one(query, model_class)
         else
-          find_all(query, table_name)
+          find_all(query, model_class)
         end
       end
 

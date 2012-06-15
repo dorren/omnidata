@@ -1,11 +1,12 @@
 require 'spec_helper'
 require 'shared_orm'
+require 'shared_model_hooks'
 require 'shared_persistence'
 require 'shared_association'
 
 describe Omnidata::Adapters::MysqlAdapter do
   let(:mgr) { Omnidata::Adapters::AdapterManager.instance }
-  let(:user) { Example::User.new }
+  let(:user) { Example::User.new(:name => 'mysql user') }
   let(:config) {{:adapter => 'mysql', :database => 'omnidata_test', :username => 'root'}}
 
   before(:all) do
@@ -31,6 +32,7 @@ describe Omnidata::Adapters::MysqlAdapter do
   end
 
   include_examples 'Orm'
+  include_examples 'ModelHooks'
   include_examples 'Persistence'
   include_examples 'Association'
 end

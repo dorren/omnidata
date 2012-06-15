@@ -5,9 +5,6 @@ module Omnidata
   module Persistence
     extend ActiveSupport::Concern
 
-    included do
-    end
-
     def save
       if new_record?
         self.id = self.class.create(attributes)
@@ -18,11 +15,15 @@ module Omnidata
     end
 
     def destroy
-      self.class.destroy(id)
+      run_hooks :destroy do
+        self.class.destroy(id)
+      end
     end
     
     module ClassMethods
       attr_reader :adapter
+
+      #set_callback :create, :before, :before_create 
 
       def use_database(name)
         adapter = Adapters::AdapterManager.instance.adapter(name)
@@ -57,13 +58,17 @@ module Omnidata
       end
 
       def create(attrs)
-        key = adapter.create(attrs, self)
-        build_model(attrs.merge('id'=> key))
+        run_hooks :create do
+          key = adapter.create(attrs, self)
+          build_model(attrs.merge('id'=> key))
+        end
       end
 
       def update(pk, attrs)
-        adapter.update(pk, attrs, self)
-        self
+        run_hooks :update do
+          adapter.update(pk, attrs, self)
+          self
+        end
       end
 
       def destroy(pk)

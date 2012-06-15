@@ -14,6 +14,16 @@ module Example
     attribute :comments, [Comment]
 
     index :age
+
+    before_destroy :log_destroy
+    def log_destroy
+      "logging destory"
+    end
+
+    before_create :announce
+    def self.announce
+      "new user will be created"
+    end
   end
 
 end

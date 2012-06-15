@@ -5,7 +5,7 @@ require 'shared_association'
 
 describe Omnidata::Adapters::MongodbAdapter do
   let(:mgr) { Omnidata::Adapters::AdapterManager.instance }
-  let(:user) { Example::User.new }
+  let(:user) { Example::User.new(:name => 'mongo user') }
   let(:config) {{:adapter => 'mongodb', :database => 'mydb'}}
 
   before(:all) do
@@ -41,9 +41,9 @@ describe Omnidata::Adapters::MongodbAdapter do
     user.class.count.should == 0
   end
 
-  #include_examples 'Orm'
-  #include_examples 'Persistence'
-  #include_examples 'Association'
+  include_examples 'Orm'
+  include_examples 'Persistence'
+  include_examples 'Association'
 end
 
 

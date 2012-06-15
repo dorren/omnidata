@@ -33,10 +33,10 @@ module Omnidata
         idx_name = options[:name] || index_name(fields)
         
         all = []
-        all << [name.foreign_key.to_sym, attributes[:id].options[:primitive]]
+        all << [name.foreign_key.to_sym, attribute_set[:id].options[:primitive]]
 
         fields.each do |f|
-          attr = attributes[f]
+          attr = attribute_set[f]
           all << [attr.name, attr.options[:primitive]]
         end
 

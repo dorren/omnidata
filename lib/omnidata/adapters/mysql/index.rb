@@ -50,9 +50,7 @@ module Omnidata
       #   User.find(:age.gt => 10)
       #   User.find(:first_name.lt => 'John')
       class Index
-        include Virtus
-        include Persistence
-        include Orm
+        include ::Omnidata::Core
 
         class << self
           attr_accessor :name
@@ -63,13 +61,13 @@ module Omnidata
           end
 
           def to_sql
-            fields_part = attributes.collect{|attr|
+            fields_part = attribute_set.collect{|attr|
                            name = attr.name
                            column = Schema::COLUMN_TYPES[attr.options[:primitive]]
                            type = column[:limit] ? "#{column[:name]}(#{column[:limit]})" : "#{column[:name]}"
                            "#{name} #{type} NOT NULL"
                          }.join(",\n  ")
-            keys_part = attributes.collect{|attr| "KEY (#{attr.name})"}.join(",\n  ")
+            keys_part = attribute_set.collect{|attr| "KEY (#{attr.name})"}.join(",\n  ")
 
             sql =%{\
 CREATE TABLE #{table_name} (

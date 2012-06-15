@@ -1,5 +1,6 @@
 require 'omnidata/adapters/abstract_adapter'
 require 'omnidata/adapters/adapter_manager'
+require 'omnidata/model_hooks'
 require 'omnidata/persistence'
 require 'omnidata/indexing'
 require 'omnidata/orm'
